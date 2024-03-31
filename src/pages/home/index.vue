@@ -1,6 +1,13 @@
 <template>
   <div>
-    this is home page!
+    
+    <div class="zuo">
+      侧边栏
+    </div>
+
+    <div class="you">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
