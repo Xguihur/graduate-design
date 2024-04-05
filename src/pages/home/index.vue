@@ -1,47 +1,36 @@
 <template>
-  <div class="home">
+  <div>
     <el-row class="tac">
-      <el-col :span="5">
-        <div class="left">
-          <nav-menu></nav-menu>
-        </div>
+      <el-col :span="5" class="aside">
+        <NavMenu></NavMenu>
       </el-col>
-
-      <el-col :span="19">
-        <div class="right">
-          <el-button type="primary"> add </el-button>
-          <router-view></router-view>
-        </div>
+      <el-col :span="18">
+        <router-view></router-view>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import NavMenu from '@/layout/NavMenu'
-
-export default {
-  name: 'home',
-  data () {
-    return {}
-  },
-  components:{
-    NavMenu
-  },
-  methods: {},
-  mounted () {},
-}
+import NavMenu from '../../layout/NavMenu.vue';
+  export default {
+    name: 'home',
+    components:{NavMenu},
+    data () {
+      return {}
+    },
+    methods: {},
+    mounted () {},
+  }
 
 </script>
 
 <style scoped lang="less">
-.home{
-  padding: 0 10px;
+
+.tac{
+  box-sizing: border-box;
 }
-.left{
-  background-color: pink;
-}
-.right{
-  background-color: yellow;
+.aside{
+  margin-right: 20px;
 }
 </style>

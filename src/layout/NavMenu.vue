@@ -1,39 +1,35 @@
 <template>
   <div>
     <el-menu
-      default-active="2"
+      default-active="animal"
       class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose">
-      <el-submenu index="1">
+      @select="handleSelect">
+
+      <el-submenu index="base">
         <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>导航一</span>
+          <i class="el-icon-receiving"></i>
+          <span>基础管理</span>
         </template>
-        <el-menu-item-group>
-          <template slot="title">分组一</template>
-          <el-menu-item index="1-1">选项1</el-menu-item>
-          <el-menu-item index="1-2">选项2</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="分组2">
-          <el-menu-item index="1-3">选项3</el-menu-item>
-        </el-menu-item-group>
-        <el-submenu index="1-4">
-          <template slot="title">选项4</template>
-          <el-menu-item index="1-4-1">选项1</el-menu-item>
-        </el-submenu>
+        <el-menu-item index="animal">动物信息管理</el-menu-item>
       </el-submenu>
-      <el-menu-item index="2">
-        <i class="el-icon-menu"></i>
-        <span slot="title">导航二</span>
+
+      <el-submenu index="approval">
+        <template slot="title">
+          <i class="el-icon-document-checked"></i>
+        <span slot="title">我的审批</span>
+        </template>
+        <el-menu-item index="mySubmit">我发起的</el-menu-item>
+        <el-menu-item index="myApprove">我审核的</el-menu-item>
+      </el-submenu>
+
+      <el-menu-item index="user">
+        <i class="el-icon-lock"></i>
+        <span slot="title">用户权限管理</span>
       </el-menu-item>
-      <el-menu-item index="3" disabled>
-        <i class="el-icon-document"></i>
-        <span slot="title">导航三</span>
-      </el-menu-item>
-      <el-menu-item index="4">
+      
+      <el-menu-item index="account">
         <i class="el-icon-setting"></i>
-        <span slot="title">导航四</span>
+        <span slot="title">账户管理</span>
       </el-menu-item>
     </el-menu>
   </div>
@@ -46,12 +42,16 @@
       return {}
     },
     methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
+      handleSelect(key,keyPath){
+        // console.log(key, keyPath);
+        // 拼接路由
+        let path = ''
+        keyPath.forEach(item => {
+          path += '/' + item
+        })
+        this.$router.push(path)
       }
+
     },
     mounted () {},
   }
@@ -59,5 +59,7 @@
 </script>
 
 <style scoped lang="less">
-
+  /deep/.el-menu {
+    text-align: left;
+  }
 </style>
