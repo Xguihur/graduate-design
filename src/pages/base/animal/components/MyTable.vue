@@ -79,13 +79,13 @@ export default {
   methods: {
     // 子组件触发事件，此时触发父组件的事件，并且将参数传给父组件。由父组件执行具体的逻辑操作
     exportDetail(row) {
-      this.$emit( 'exportDetail', row )
+      this.$emit('exportDetail', row);
     },
     editor(row) {
-      this.$emit('editor', row)
+      this.$emit('editor', row);
     },
     remove(row) {
-      this.$emit('remove', row)
+      this.$emit('remove', row);
     },
   },
 };

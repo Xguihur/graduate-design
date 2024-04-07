@@ -1,7 +1,7 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   // 动态加载路由组件
@@ -9,46 +9,47 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: ()=>import('@/pages/home'),
-      children:[
+      redirect: '/base/animal',
+      component: () => import('@/pages/home'),
+      children: [
         {
           path: 'base',
           name: 'base',
           redirect: '/base/animal',
-          component: ()=>import('@/pages/base'),
-          children:[
+          component: () => import('@/pages/base'),
+          children: [
             {
               path: 'animal',
               name: 'animal',
-              component: ()=>import('@/pages/base/animal'),
+              component: () => import('@/pages/base/animal'),
             },
           ]
         },
         {
           path: 'user',
           name: 'user',
-          component: ()=>import('@/pages/user'),
+          component: () => import('@/pages/user'),
         },
         {
           path: 'account',
           name: 'account',
-          component: ()=>import('@/pages/account'),
+          component: () => import('@/pages/account'),
         },
         {
           path: 'approval',
           name: 'approval',
           redirect: '/approval/mySubmit',
-          component: ()=>import('@/pages/approval'),
-          children:[
+          component: () => import('@/pages/approval'),
+          children: [
             {
               path: 'mySubmit',
               name: 'mySubmit',
-              component: ()=>import('@/pages/approval/mySubmit'),
+              component: () => import('@/pages/approval/mySubmit'),
             },
             {
               path: 'myApprove',
               name: 'myApprove',
-              component: ()=>import('@/pages/approval/myApprove'),
+              component: () => import('@/pages/approval/myApprove'),
             }
           ]
         }
@@ -57,12 +58,12 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
-      component: ()=>import('@/pages/login')
+      component: () => import('@/pages/login')
     },
     {
       path: '*',
       name: '404page',
-      component: ()=>import('@/pages/404page'),
+      component: () => import('@/pages/404page'),
     },
   ]
-})
+});

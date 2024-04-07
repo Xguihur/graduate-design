@@ -9,14 +9,14 @@
 </template>
 
 <script>
-  export default {
-    name: '404page',
-    data () {
-      return {}
-    },
-    methods: {},
-    mounted () {},
-  }
+export default {
+  name: '404page',
+  data() {
+    return {};
+  },
+  methods: {},
+  mounted() {},
+};
 
 </script>
 

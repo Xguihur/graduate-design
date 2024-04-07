@@ -62,73 +62,73 @@
 </template>
 
 <script>
-  export default {
-    name: '',
-    props: {
-      dialogRuleVisible: {
-        type: Boolean,
-        default: false,
-      },
+export default {
+  name: '',
+  props: {
+    dialogRuleVisible: {
+      type: Boolean,
+      default: false,
     },
-    data () {
-      // 校验期次范围:
-      const checkRange = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入期次范围'));
-        }
-        // 判断是否为数字类型
-        const regex = /^(?:[1-9]\d{0,3}|9999)$/;
-        if (value.match(regex) == null) {
-          return callback(new Error('请选择在 1-9999 之间的整数'));
-        }
-        callback();
-      };
-      return {
-        rules: {
-          adaptStage: [
-            { required: true, message: '请选择适用阶段', trigger: 'change' },
-          ],
-          dateRangeStart: [
-            { validator: checkRange, trigger: 'blur' }
-          ],
-          dateRangeEnd: [
-            { validator: checkRange, trigger: 'blur' }
-          ],
-        },
-        ruleConfig: {
-          adaptStage: [],
-          dateRangeStart: null,
-          dateRangeEnd: null,
-        },
-        stageList: [
-          {
-            value: '0',
-            label: 'L0'
-          }, {
-            value: '1',
-            label: 'L1'
-          }, {
-            value: '2',
-            label: 'L2'
-          }, {
-            value: '3',
-            label: 'L3'
-          }, {
-            value: '4',
-            label: 'L4'
-          },
-          {
-            value: '5',
-            label: 'L5'
-          }, {
-            value: '6',
-            label: 'L6'
-          }
-        ],
+  },
+  data() {
+    // 校验期次范围:
+    const checkRange = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('请输入期次范围'));
       }
-    },
-    methods: {
-      async confirmModify(formName) {
+      // 判断是否为数字类型
+      const regex = /^(?:[1-9]\d{0,3}|9999)$/;
+      if (value.match(regex) == null) {
+        return callback(new Error('请选择在 1-9999 之间的整数'));
+      }
+      callback();
+    };
+    return {
+      rules: {
+        adaptStage: [
+          { required: true, message: '请选择适用阶段', trigger: 'change' },
+        ],
+        dateRangeStart: [
+          { validator: checkRange, trigger: 'blur' }
+        ],
+        dateRangeEnd: [
+          { validator: checkRange, trigger: 'blur' }
+        ],
+      },
+      ruleConfig: {
+        adaptStage: [],
+        dateRangeStart: null,
+        dateRangeEnd: null,
+      },
+      stageList: [
+        {
+          value: '0',
+          label: 'L0'
+        }, {
+          value: '1',
+          label: 'L1'
+        }, {
+          value: '2',
+          label: 'L2'
+        }, {
+          value: '3',
+          label: 'L3'
+        }, {
+          value: '4',
+          label: 'L4'
+        },
+        {
+          value: '5',
+          label: 'L5'
+        }, {
+          value: '6',
+          label: 'L6'
+        }
+      ],
+    };
+  },
+  methods: {
+    async confirmModify(formName) {
       // 校验表单
       let valid = false;
       try {
@@ -145,13 +145,13 @@
       };
       // 将整理好的参数传递给父组件，由父组件进行接口调用
       this.$emit('confirmModify', data);
-      },
-      cancleModify(){
-        this.$emit('cancleModify');
-      },
     },
-    mounted () {},
-  }
+    cancleModify() {
+      this.$emit('cancleModify');
+    },
+  },
+  mounted() {},
+};
 
 </script>
 

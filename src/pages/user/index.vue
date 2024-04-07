@@ -5,14 +5,14 @@
 </template>
 
 <script>
-  export default {
-    name: 'user',
-    data () {
-      return {}
-    },
-    methods: {},
-    mounted () {},
-  }
+export default {
+  name: 'user',
+  data() {
+    return {};
+  },
+  methods: {},
+  mounted() {},
+};
 
 </script>
 

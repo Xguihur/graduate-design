@@ -3,8 +3,8 @@
     <el-menu
       default-active="animal"
       class="el-menu-vertical-demo"
-      @select="handleSelect">
-
+      @select="handleSelect"
+      :collapse="isCollapse">
       <el-submenu index="base">
         <template slot="title">
           <i class="el-icon-receiving"></i>
@@ -26,7 +26,7 @@
         <i class="el-icon-lock"></i>
         <span slot="title">用户权限管理</span>
       </el-menu-item>
-      
+
       <el-menu-item index="account">
         <i class="el-icon-setting"></i>
         <span slot="title">账户管理</span>
@@ -36,25 +36,32 @@
 </template>
 
 <script>
-  export default {
-    name: '',
-    data () {
-      return {}
+export default {
+  name: '',
+  props: {
+    isCollapse: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+    };
+  },
+  methods: {
+    handleSelect(key, keyPath) {
+      // console.log(key, keyPath);
+      // 拼接路由
+      let path = '';
+      keyPath.forEach(item => {
+        path += '/' + item;
+      });
+      this.$router.push(path);
     },
-    methods: {
-      handleSelect(key,keyPath){
-        // console.log(key, keyPath);
-        // 拼接路由
-        let path = ''
-        keyPath.forEach(item => {
-          path += '/' + item
-        })
-        this.$router.push(path)
-      }
 
-    },
-    mounted () {},
-  }
+  },
+  mounted() {},
+};
 
 </script>
 
