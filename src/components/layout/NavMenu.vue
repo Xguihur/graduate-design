@@ -4,7 +4,8 @@
       default-active="animal"
       class="el-menu-vertical-demo"
       @select="handleSelect"
-      :collapse="isCollapse">
+      :collapse="isCollapse"
+      mode="vertical">
       <el-submenu index="base">
         <template slot="title">
           <i class="el-icon-receiving"></i>
@@ -68,5 +69,9 @@ export default {
 <style scoped lang="less">
   /deep/.el-menu {
     text-align: left;
+  }
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 100%;
+    min-height: 400px;
   }
 </style>

@@ -1,6 +1,29 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="isActive" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <div class="left-menu">
+      <!-- 汉堡伸缩按钮 -->
+      <hamburger id="hamburger-container" :is-active="isCollapse" class="hamburger-container" @toggleClick="toggleSideBar" />
+
+      <!-- 面包屑 -->
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/' }">基础管理</el-breadcrumb-item>
+        <el-breadcrumb-item>动物信息管理</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+
+    <!-- 右侧设置 -->
+    <div class="right-menu">
+      <el-dropdown @command="handleCommand">
+        <el-button type="primary">
+          设置<i class="el-icon-arrow-down el-icon--right"></i>
+        </el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="home">返回首页</el-dropdown-item>
+          <el-dropdown-item command="exit">退出系统</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
   </div>
 </template>
 
@@ -10,6 +33,12 @@ import Hamburger from '@/components/Hamburger';
 export default {
   components: {
     Hamburger,
+  },
+  props: {
+    isCollapse: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -21,9 +50,16 @@ export default {
   methods: {
     toggleSideBar() {
       this.$emit('toggleClick');
-      // console.log('toggleSideBar');
-      // this.isActive = !this.isActive;
     },
+    handleCommand(command) {
+      if (command === 'home') {
+        this.$router.push('/');
+      }
+      if (command === 'exit') {
+        // 这里还需要清缓存等一系列操作
+        this.$router.push('/login');
+      }
+    }
   }
 };
 </script>
@@ -35,11 +71,19 @@ export default {
   position: relative;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px 0 0;
+
+  .left-menu {
+    display: flex;
+    align-items: center;
+  }
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
-    float: left;
     cursor: pointer;
     transition: background .3s;
     -webkit-tap-highlight-color:transparent;
@@ -49,66 +93,5 @@ export default {
     }
   }
 
-  .breadcrumb-container {
-    float: left;
-  }
-
-  .errLog-container {
-    display: inline-block;
-    vertical-align: top;
-  }
-
-  .right-menu {
-    float: right;
-    height: 100%;
-    line-height: 50px;
-    display: flex;
-
-    &:focus {
-      outline: none;
-    }
-
-    .right-menu-item {
-      display: inline-block;
-      padding: 0 8px;
-      height: 100%;
-      font-size: 18px;
-      color: #5a5e66;
-      vertical-align: text-bottom;
-
-      &.hover-effect {
-        cursor: pointer;
-        transition: background .3s;
-
-        &:hover {
-          background: rgba(0, 0, 0, .025)
-        }
-      }
-    }
-
-    .avatar-container {
-      margin-right: 30px;
-
-      .avatar-wrapper {
-        margin-top: 5px;
-        position: relative;
-
-        .user-avatar {
-          cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-        }
-
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -8px;
-          top: 23px;
-          font-size: 12px;
-        }
-      }
-    }
-  }
 }
 </style>

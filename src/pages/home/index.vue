@@ -1,13 +1,13 @@
 <template>
   <div>
-    <el-row class="tac">
+   <el-row type="flex" class="tac">
       <!-- 侧边栏 -->
       <el-col :span="4" class="aside">
         <NavMenu ref="navMenu" :isCollapse="isCollapse"></NavMenu>
       </el-col>
-      <el-col :span="19" class="content">
+      <el-col :span="20" class="content">
         <!-- 顶部导航 -->
-        <nav-bar @toggleClick="changeCollopse"></nav-bar>
+        <nav-bar @toggleClick="changeCollopse" :isCollapse="isCollapse"></nav-bar>
         <!-- 内容区域 -->
         <router-view class="content-bottom"></router-view>
       </el-col>
@@ -42,9 +42,9 @@ export default {
   box-sizing: border-box;
 }
 .aside{
-  margin-right: 20px;
 }
 .content{
+  padding: 0;
   header{
     height: 50px;
     overflow: hidden;
@@ -52,6 +52,7 @@ export default {
 
   .content-bottom{
     height: calc(100vh - 60px);
+    padding: 0 20px;
   }
 }
 </style>
