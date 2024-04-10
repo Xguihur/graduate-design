@@ -102,12 +102,14 @@ export default {
         if (valid) {
           this.loading = true;
           // 调用接口进行登录，登录成功后跳转路由
+          // 拿到 token 后存到 localStorage 中
           setTimeout(() => {
             this.$message({
               message: '登录成功',
               type: 'success'
             });
             this.loading = false;
+            localStorage.setItem('token', '123456');
             this.$router.push({ path: '/' });
           }, 1000);
         } else {

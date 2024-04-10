@@ -6,9 +6,7 @@
 
       <!-- 面包屑 -->
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/' }">基础管理</el-breadcrumb-item>
-        <el-breadcrumb-item>动物信息管理</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path:breadCrumb.path==''?'/':breadCrumb.path}" v-for="breadCrumb in breadCrumbList" :key="breadCrumb.path">{{breadCrumb.meta.title ?breadCrumb.meta.title:'首页' }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
 
@@ -43,9 +41,20 @@ export default {
   data() {
     return {
       isActive: false,
+      breadCrumbList: []
     };
   },
   computed: {
+  },
+  watch: {
+    // 监听路由的变化,并且是立即执行的
+    '$route': {
+      handler(to, from) {
+        // 这个 to 可以拿到跳转后的路由信息，matched 中包含了当前路由的父子信息，可以用来渲染面包屑
+        this.breadCrumbList = to.matched;
+      },
+      immediate: true
+    }
   },
   methods: {
     toggleSideBar() {
@@ -56,10 +65,12 @@ export default {
         this.$router.push('/');
       }
       if (command === 'exit') {
-        // 这里还需要清缓存等一系列操作
+        localStorage.removeItem('token');
         this.$router.push('/login');
       }
     }
+  },
+  mounted() {
   }
 };
 </script>

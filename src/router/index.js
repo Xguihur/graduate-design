@@ -98,8 +98,25 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  // 可以在这里进行路由权限验证等操作
-  // 例如检查用户是否登录，是否有权限访问该路由
-  next();
+  // 判断是否登录
+  let token = localStorage.getItem('token');
+  if (token) {
+    // 不需要校验token的有效性，在接口调用的地方会校验
+    if (to.path === '/login') {
+      // 如果是登录页面，就跳转到首页
+      next('/');
+    }
+    else {
+      next();
+    }
+  } else {
+    // 用户未登录
+    if (to.path === '/login') {
+      next();
+    }
+    else {
+      next('/login');
+    }
+  }
 });
 export default router;

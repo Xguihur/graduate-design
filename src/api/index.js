@@ -4,7 +4,7 @@ import request from './request';
 // get 请求
 export const getList = (params) => {
   return request({
-    url: '/api/list',
+    url: '/api/images/other/image-1712746386275.jpeg',
     method: 'get',
     params: params,
   });

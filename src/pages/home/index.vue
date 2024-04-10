@@ -1,17 +1,23 @@
 <template>
   <div>
-   <el-row type="flex" class="tac">
-      <!-- 侧边栏 -->
-      <el-col :span="4" class="aside">
+    <el-container >
+      <el-aside :width="isCollapse?'50px':'210px'" >
+        <!-- 侧边栏 -->
         <NavMenu ref="navMenu" :isCollapse="isCollapse"></NavMenu>
-      </el-col>
-      <el-col :span="20" class="content">
+      </el-aside>
+
+      <el-container>
         <!-- 顶部导航 -->
-        <nav-bar @toggleClick="changeCollopse" :isCollapse="isCollapse"></nav-bar>
-        <!-- 内容区域 -->
-        <router-view class="content-bottom"></router-view>
-      </el-col>
-    </el-row>
+        <el-header>
+          <nav-bar @toggleClick="changeCollopse" :isCollapse="isCollapse"></nav-bar>
+        </el-header>
+
+        <el-main class="content">
+          <!-- 内容区域 -->
+          <router-view class="content-bottom"></router-view>
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
@@ -31,19 +37,34 @@ export default {
       this.isCollapse = !this.isCollapse;
     },
   },
-  mounted() {},
+  mounted() {
+  },
 };
 
 </script>
 
 <style scoped lang="less">
 
-.tac{
-  box-sizing: border-box;
+.el-aside {
+  color: #333;
+
 }
-.aside{
+.el-aside {
+  overflow-x: hidden;
+  overflow-y: auto;
+  line-height: 200px;
+  text-align: left;
+  cursor: pointer;
+  transition: width .3s linear;
+  scrollbar-width: none; /* firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 .content{
+  flex: 1;
   padding: 0;
   header{
     height: 50px;
@@ -55,4 +76,5 @@ export default {
     padding: 0 20px;
   }
 }
+
 </style>
