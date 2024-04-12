@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import { Message } from 'element-ui';
 
 Vue.use(Router);
 
@@ -104,18 +105,31 @@ router.beforeEach((to, from, next) => {
     // 不需要校验token的有效性，在接口调用的地方会校验
     if (to.path === '/login') {
       // 如果是登录页面，就跳转到首页
-      next('/');
+      // console.log(from);
+      next(from.path);
     }
     else {
       next();
     }
   } else {
-    // 用户未登录
     if (to.path === '/login') {
       next();
     }
     else {
-      next('/login');
+      // 用户未登录 这里处理一下缓存目标页面，登录后跳转到目标页面
+      // 展示el-message提示用户登录，并跳转到登录页面
+      Message({
+        message: '请先登录',
+        type: 'error'
+      });
+      next(
+        {
+          path: '/login',
+          query: {
+            redirect: to.fullPath,
+          }
+        }
+      );
     }
   }
 });

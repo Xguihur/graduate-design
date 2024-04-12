@@ -110,7 +110,16 @@ export default {
             });
             this.loading = false;
             localStorage.setItem('token', '123456');
-            this.$router.push({ path: '/' });
+            // 用于解决接口拦截器重复跳转的缓存
+            if (localStorage.getItem('toLogin')) {
+              localStorage.removeItem('toLogin');
+            }
+            // 如果路由中有 redirect 参数，就跳转到 redirect 参数指向的页面
+            if (this.$route.query.redirect) {
+              this.$router.push(this.$route.query.redirect);
+            } else {
+              this.$router.push({ path: '/' });
+            }
           }, 1000);
         } else {
           // console.log('error submit!!');

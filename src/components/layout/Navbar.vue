@@ -27,6 +27,7 @@
 
 <script>
 import Hamburger from '@/components/Hamburger';
+import request from '@/api/request';
 
 export default {
   components: {
@@ -66,7 +67,12 @@ export default {
       }
       if (command === 'exit') {
         localStorage.removeItem('token');
-        this.$router.push('/login');
+        this.$router.push({
+          path: '/login',
+          query: {
+            redirect: this.$route.fullPath
+          }
+        });
       }
     }
   },
