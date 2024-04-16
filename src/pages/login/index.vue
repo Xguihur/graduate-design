@@ -1,10 +1,16 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      autocomplete="on"
+      label-position="left"
+    >
       <div class="title-container">
         <!-- <h3 class="title">保护动物工作台 </h3> -->
-        <h3 class="title">工作台 </h3>
+        <h3 class="title">工作台</h3>
       </div>
 
       <el-form-item prop="username">
@@ -20,7 +26,12 @@
         />
       </el-form-item>
 
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+      <el-tooltip
+        v-model="capsTooltip"
+        content="Caps lock is On"
+        placement="right"
+        manual
+      >
         <el-form-item prop="password">
           <i class="el-icon-lock"></i>
           <el-input
@@ -37,88 +48,97 @@
             @keyup.enter.native="handleLogin"
           />
           <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            <svg-icon
+              :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+            />
           </span>
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="width: 100%; margin-bottom: 30px"
+        @click.native.prevent="handleLogin"
+        >登录</el-button
+      >
     </el-form>
   </div>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate';
+import { validUsername } from "@/utils/validate";
 
 export default {
-  name: 'login',
+  name: "login",
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('请输入正确的用户名'));
+        callback(new Error("请输入正确的用户名"));
       } else {
         callback();
       }
     };
     const validatePassword = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入密码'));
+        callback(new Error("请输入密码"));
       } else {
         callback();
       }
     };
     return {
       loginForm: {
-        username: '',
-        password: ''
+        username: "",
+        password: "",
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [
+          { required: true, trigger: "blur", validator: validateUsername },
+        ],
+        password: [
+          { required: true, trigger: "blur", validator: validatePassword },
+        ],
       },
-      passwordType: 'password',
+      passwordType: "password",
       capsTooltip: false,
       loading: false,
-      autoLogin: '',
+      autoLogin: "",
     };
   },
   methods: {
     checkCapslock(e) {
       const { key } = e;
-      this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z');
+      this.capsTooltip = key && key.length === 1 && key >= "A" && key <= "Z";
     },
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = '';
+      if (this.passwordType === "password") {
+        this.passwordType = "";
       } else {
-        this.passwordType = 'password';
+        this.passwordType = "password";
       }
       this.$nextTick(() => {
         this.$refs.password.focus();
       });
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
           // 调用接口进行登录，登录成功后跳转路由
           // 拿到 token 后存到 localStorage 中
           setTimeout(() => {
             this.$message({
-              message: '登录成功',
-              type: 'success'
+              message: "登录成功",
+              type: "success",
             });
             this.loading = false;
-            localStorage.setItem('token', '123456');
-            // 用于解决接口拦截器重复跳转的缓存
-            if (localStorage.getItem('toLogin')) {
-              localStorage.removeItem('toLogin');
-            }
+            localStorage.setItem("token", "123456");
+
             // 如果路由中有 redirect 参数，就跳转到 redirect 参数指向的页面
             if (this.$route.query.redirect) {
               this.$router.push(this.$route.query.redirect);
             } else {
-              this.$router.push({ path: '/' });
+              this.$router.push({ path: "/" });
             }
           }, 1000);
         } else {
@@ -129,22 +149,27 @@ export default {
     },
   },
   mounted() {
-    if (this.loginForm.username === '') {
+    if (this.loginForm.username === "") {
       this.$refs.username.focus();
-    } else if (this.loginForm.password === '') {
+    } else if (this.loginForm.password === "") {
       this.$refs.password.focus();
     }
   },
+  beforeDestroy() {
+    // 用于解决接口拦截器重复跳转的缓存
+    if (localStorage.getItem("toLogin")) {
+      localStorage.removeItem("toLogin");
+    }
+  },
 };
-
 </script>
 
 <style lang="less">
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-@bg:#283443;
-@light_gray:#fff;
+@bg: #283443;
+@light_gray: #fff;
 @cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: @cursor)) {
@@ -187,9 +212,9 @@ export default {
 </style>
 
 <style scoped lang="less">
-@bg:#1f7474;
-@dark_gray:#889aa4;
-@light_gray:#eee;
+@bg: #1f7474;
+@dark_gray: #889aa4;
+@light_gray: #eee;
 
 // icon 的样式
 i {
