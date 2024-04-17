@@ -101,7 +101,11 @@ export default {
         operation: true
       },
       searchForm: {
-        course: '',
+        name: '',
+        category: '1',
+        categoryValue: '',
+        id: '',
+        address: '',
       },
       paginationInit: {
         currentPage: 1,
@@ -135,9 +139,6 @@ export default {
           message: '删除成功!'
         });
       });
-    },
-    exportDetail(row) {
-      console.log('exportDetail:', row);
     },
     changeSize(data) {
       // 分页器数据已经在子组件中修改完毕，父组件调用 this.getTableData() 请求表格数据即可
