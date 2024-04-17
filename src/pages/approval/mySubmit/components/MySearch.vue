@@ -28,10 +28,10 @@
       </div>
 
       <div class="search-box">
-        <div style="width: 120px">发起人ID：</div>
+        <div style="width: 120px">审核人ID：</div>
         <el-input
           placeholder="请输入发起人ID："
-          v-model="searchForm.createrId"
+          v-model="searchForm.approvalId"
         ></el-input>
       </div>
 

@@ -33,8 +33,20 @@ tableData: 表格数据 operation: 是否需要操作列 */
         align="center"
       >
         <template slot-scope="scope">
-          <el-button type="text" @click="editor(scope.row)">编辑</el-button>
-          <el-button type="text" @click="remove(scope.row)">删除</el-button>
+          <template v-if="scope.row.status == '审批中'">
+            <span>/</span>
+          </template>
+          <template v-if="scope.row.status == '已通过'">
+            <span>/</span>
+          </template>
+          <template v-if="scope.row.status == '已驳回'">
+            <el-button
+              type="text"
+              @click="editor(scope.row)"
+              style="color: #fa3b48"
+              >重新编辑</el-button
+            >
+          </template>
         </template>
       </el-table-column>
     </el-table>
