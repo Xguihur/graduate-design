@@ -27,8 +27,10 @@
     <div class="section-dialog">
       <my-dialog
         :dialogRuleVisible="dialogRuleVisible"
+        :itemMessage="itemMessage"
         @cancleModify="cancleModify"
-        @confirmModify="confirmModify"
+        @approvalSuccess="approvalMethod"
+        @approvalRefuse="approvalMethod"
       ></my-dialog>
     </div>
   </div>
@@ -39,6 +41,7 @@ import MySearch from "./components/MySearch.vue";
 import MyTable from "./components/MyTable.vue";
 import MyDialog from "./components/MyDialog.vue";
 import GhPagination from "../../../components/GhPagination.vue";
+import { getApprovalTable, postApproval } from "@/api/myApproval.js";
 
 export default {
   name: "myApprove",
@@ -108,13 +111,25 @@ export default {
         pageSize: 10,
       },
       dialogRuleVisible: false,
+      itemMessage: {},
     };
   },
   methods: {
     // 获取表格数据
+    // 获取表格数据
     getTableData() {
-      const parmas = {}; // 设置请求接口的参数
+      // 设置请求接口的参数
+      const parmas = {
+        userId: localStorage.getItem("userId"),
+        ...this.searchForm,
+        ...this.paginationInit,
+      };
       // 调用接口请求数据
+      getAnimalTable(parmas).then((res) => {
+        if (res && res.data) {
+          this.tableProps.tableData = res.data;
+        }
+      });
     },
     // 子组件触发的事件监听
     search(data) {
@@ -147,10 +162,22 @@ export default {
     cancleModify() {
       this.dialogRuleVisible = false;
     },
-    confirmModify(data) {
-      this.dialogRuleVisible = false;
-      console.log(data);
+    // 进行审批
+    approvalMethod(data) {
       // 拿到参数调用接口
+      postApproval(data)
+        .then((res) => {
+          if (res && res.data) {
+            this.$message({
+              type: "success",
+              message: "审批完成!",
+            });
+          }
+          this.getTableData();
+        })
+        .finally(() => {
+          this.dialogRuleVisible = false;
+        });
     },
   },
   mounted() {},

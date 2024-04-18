@@ -1,60 +1,136 @@
-/**
-  组件 说明:
-    props： dialogRuleVisible  -- 规则配置弹窗是否显示
-*/
+/** 组件 说明: props： dialogRuleVisible -- 规则配置弹窗是否显示 */
 
 <template>
   <div>
-     <!-- 规则配置弹窗 -->
-     <el-dialog
+    <!-- 规则配置弹窗 -->
+    <el-dialog
       title="规则配置"
       :visible.sync="dialogRuleVisible"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       :show-close="false"
       width="60%"
-      center>
-      <el-form class="config-form item" :rules="rules" ref="ruleForm" :model="ruleConfig">
-        <el-form-item prop="adaptStage" label="选择适用阶段">
-          <el-select v-model="ruleConfig.adaptStage" multiple placeholder="请选择" clearable >
-          <el-option
-            v-for="item in stageList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
+      center
+      class="box"
+    >
+      <el-form
+        class="config-form item"
+        :rules="rules"
+        ref="ruleForm"
+        :model="ruleConfig"
+      >
+        <el-form-item label="编号" required class="form-item" prop="id">
+          <el-input
+            class="rule-input"
+            placeholder="请输入"
+            maxlength="4"
+            v-model="ruleConfig.id"
+            :disabled="disabled"
+          >
+          </el-input>
         </el-form-item>
-        <el-form-item label="适用期次范围" required class="range">
-          <el-col :span="8">
-            <el-form-item prop="dateRangeStart">
-              <el-input
-                class="rule-input"
-                placeholder="请输入"
-                maxlength="4"
-                v-model="ruleConfig.dateRangeStart"
-                >
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col class="line" :span="1">
-              <div class="sign" style="text-align: center;">-</div>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item prop="dateRangeEnd">
-              <el-input
-                class="rule-input"
-                placeholder="请输入"
-                maxlength="4"
-                v-model="ruleConfig.dateRangeEnd"
-                >
-              </el-input>
-            </el-form-item>
-          </el-col>
+
+        <el-form-item label="名称" required class="form-item" prop="name">
+          <el-input
+            class="rule-input"
+            placeholder="请输入"
+            maxlength="4"
+            v-model="ruleConfig.name"
+            :disabled="disabled"
+          >
+          </el-input>
+        </el-form-item>
+
+        <el-form-item label="分布" required class="form-item" prop="address">
+          <el-input
+            :disabled="disabled"
+            class="rule-input"
+            placeholder="请输入"
+            maxlength="4"
+            v-model="ruleConfig.address"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item label="纲" required class="form-item" prop="gang">
+          <el-input
+            :disabled="disabled"
+            class="rule-input"
+            placeholder="请输入"
+            maxlength="4"
+            v-model="ruleConfig.gang"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item label="目" required class="form-item" prop="mu">
+          <el-input
+            :disabled="disabled"
+            class="rule-input"
+            placeholder="请输入"
+            maxlength="4"
+            v-model="ruleConfig.mu"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item label="科" required class="form-item" prop="ke">
+          <el-input
+            :disabled="disabled"
+            class="rule-input"
+            placeholder="请输入"
+            maxlength="4"
+            v-model="ruleConfig.ke"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item label="属" required class="form-item" prop="shu">
+          <el-input
+            :disabled="disabled"
+            class="rule-input"
+            placeholder="请输入"
+            maxlength="4"
+            v-model="ruleConfig.shu"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item label="种" required class="form-item" prop="zhong">
+          <el-input
+            :disabled="disabled"
+            class="rule-input"
+            placeholder="请输入"
+            maxlength="4"
+            v-model="ruleConfig.zhong"
+          >
+          </el-input>
+        </el-form-item>
+
+        <el-form-item prop="level" label="保护等级" class="form-item">
+          <el-select
+            v-model="ruleConfig.level"
+            placeholder="请选择"
+            :disabled="disabled"
+          >
+            <el-option
+              v-for="item in protecLevelOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="confirmModify('ruleForm')" style="margin-right:10px">确 定</el-button>
+        <el-button
+          type="primary"
+          @click="approvalSuccess('ruleForm')"
+          style="margin-right: 10px"
+          >通 过</el-button
+        >
+        <el-button
+          type="primary"
+          @click="approvalRefuse('ruleForm')"
+          style="margin-right: 10px"
+          >驳 回</el-button
+        >
         <el-button @click="cancleModify">取 消</el-button>
       </span>
     </el-dialog>
@@ -62,99 +138,223 @@
 </template>
 
 <script>
+import { getAnimalDetail } from "@/api/animal";
 export default {
-  name: '',
+  name: "",
   props: {
     dialogRuleVisible: {
       type: Boolean,
       default: false,
+    },
+    itemMessage: {
+      type: Object,
+      default: () => {},
     },
   },
   data() {
     // 校验期次范围:
     const checkRange = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error('请输入期次范围'));
+        return callback(new Error("请输入期次范围"));
       }
       // 判断是否为数字类型
       const regex = /^(?:[1-9]\d{0,3}|9999)$/;
       if (value.match(regex) == null) {
-        return callback(new Error('请选择在 1-9999 之间的整数'));
+        return callback(new Error("请选择在 1-9999 之间的整数"));
       }
       callback();
     };
     return {
+      disabled: true,
+      protecLevelOptions: [
+        {
+          value: "1",
+          label: "一级",
+        },
+        {
+          value: "2",
+          label: "二级",
+        },
+        {
+          value: "3",
+          label: "三级",
+        },
+        {
+          value: "4",
+          label: "四级",
+        },
+        {
+          value: "5",
+          label: "五级",
+        },
+      ],
       rules: {
-        adaptStage: [
-          { required: true, message: '请选择适用阶段', trigger: 'change' },
+        id: [
+          {
+            required: true,
+            message: "请输入编号",
+            trigger: "blur",
+          },
         ],
-        dateRangeStart: [
-          { validator: checkRange, trigger: 'blur' }
+        name: [
+          {
+            required: true,
+            message: "请输入名称",
+            trigger: "blur",
+          },
         ],
-        dateRangeEnd: [
-          { validator: checkRange, trigger: 'blur' }
+        address: [
+          {
+            required: true,
+            message: "请输入分布",
+            trigger: "blur",
+          },
+        ],
+        gang: [
+          {
+            required: true,
+            message: "请输入纲",
+            trigger: "blur",
+          },
+        ],
+        mu: [
+          {
+            required: true,
+            message: "请输入目",
+            trigger: "blur",
+          },
+        ],
+        ke: [
+          {
+            required: true,
+            message: "请输入科",
+            trigger: "blur",
+          },
+        ],
+        shu: [
+          {
+            required: true,
+            message: "请输入属",
+            trigger: "blur",
+          },
+        ],
+        zhong: [
+          {
+            required: true,
+            message: "请输入种",
+            trigger: "blur",
+          },
+        ],
+        level: [
+          {
+            required: true,
+            message: "请选择保护等级",
+            trigger: "blur",
+          },
         ],
       },
       ruleConfig: {
-        adaptStage: [],
-        dateRangeStart: null,
-        dateRangeEnd: null,
+        id: null,
+        name: "",
+        address: "",
+        gang: "",
+        mu: "",
+        ke: "",
+        shu: "",
+        zhong: "",
+        level: "1",
       },
       stageList: [
         {
-          value: '0',
-          label: 'L0'
-        }, {
-          value: '1',
-          label: 'L1'
-        }, {
-          value: '2',
-          label: 'L2'
-        }, {
-          value: '3',
-          label: 'L3'
-        }, {
-          value: '4',
-          label: 'L4'
+          value: "0",
+          label: "L0",
         },
         {
-          value: '5',
-          label: 'L5'
-        }, {
-          value: '6',
-          label: 'L6'
-        }
+          value: "1",
+          label: "L1",
+        },
+        {
+          value: "2",
+          label: "L2",
+        },
+        {
+          value: "3",
+          label: "L3",
+        },
+        {
+          value: "4",
+          label: "L4",
+        },
+        {
+          value: "5",
+          label: "L5",
+        },
+        {
+          value: "6",
+          label: "L6",
+        },
       ],
     };
   },
   methods: {
-    async confirmModify(formName) {
-      // 校验表单
-      let valid = false;
-      try {
-        valid = await this.$refs[formName].validate();// 这个函数会在内部进行校验，返回布尔值
-        // console.log(valid);
-      } catch (e) {
-        // 在校验失败时会走到当前通道，捕获异常即可
+    // 回显
+    reshow() {
+      if (Object.keys(this.itemMessage).length > 0) {
+        getAnimalDetail(this.itemMessage.id).then((res) => {
+          if (res && res.data) {
+            this.ruleConfig = res.data;
+          }
+        });
       }
-      // 设置接口需要的参数
-      const data = {
-        gradeList: this.ruleConfig.adaptStage,
-        periodFrom: this.ruleConfig.dateRangeStart,
-        periodTo: this.ruleConfig.dateRangeEnd,
-      };
-      // 将整理好的参数传递给父组件，由父组件进行接口调用
-      this.$emit('confirmModify', data);
+    },
+    // 通过
+    async approvalSuccess(formName) {
+      this.$confirm("确认通过审批？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        center: true,
+      }).then(() => {
+        const params = {
+          id: this.itemMessage.id,
+          approval: 1,
+        };
+        this.$emit("approvalSuccess", params);
+      });
+    },
+    // 驳回
+    async approvalRefuse(formName) {
+      this.$confirm("确认驳回审批？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        center: true,
+      }).then(() => {
+        const params = {
+          id: this.itemMessage.id,
+          approval: 2,
+        };
+        this.$emit("approvalRefuse", params);
+      });
     },
     cancleModify() {
-      this.$emit('cancleModify');
+      this.$emit("cancleModify");
     },
   },
-  mounted() {},
+  mounted() {
+    this.reshow();
+  },
 };
-
 </script>
 
 <style scoped lang="less">
+.config-form {
+  display: flex;
+  flex-wrap: wrap;
 
+  .form-item {
+    display: flex;
+    margin-right: 20px;
+  }
+}
 </style>

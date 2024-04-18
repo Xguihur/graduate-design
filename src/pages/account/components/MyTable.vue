@@ -36,6 +36,9 @@ tableData: 表格数据 operation: 是否需要操作列 */
       >
         <template slot-scope="scope">
           <el-button type="text" @click="editor(scope.row)">编辑</el-button>
+          <el-button type="text" @click="resetPassword(scope.row)"
+            >重置密码</el-button
+          >
           <el-button type="text" @click="remove(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -73,6 +76,9 @@ export default {
     },
     remove(row) {
       this.$emit("remove", row);
+    },
+    resetPassword(row) {
+      this.$emit("resetPassword", row);
     },
   },
 };

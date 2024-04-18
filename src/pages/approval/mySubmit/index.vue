@@ -27,6 +27,7 @@
     <div class="section-dialog">
       <my-dialog
         :dialogRuleVisible="dialogRuleVisible"
+        :itemMessage="itemMessage"
         @cancleModify="cancleModify"
         @confirmModify="confirmModify"
       ></my-dialog>
@@ -35,6 +36,8 @@
 </template>
 
 <script>
+import { postAnimalDetail } from "@/api/animal.js";
+import { getSubmitTable } from "@/api/mySubmit.js";
 import MySearch from "./components/MySearch.vue";
 import MyTable from "./components/MyTable.vue";
 import MyDialog from "./components/MyDialog.vue";
@@ -108,13 +111,24 @@ export default {
         pageSize: 10,
       },
       dialogRuleVisible: false,
+      itemMessage: {},
     };
   },
   methods: {
     // 获取表格数据
     getTableData() {
-      const parmas = {}; // 设置请求接口的参数
+      // 设置请求接口的参数
+      const parmas = {
+        userId: localStorage.getItem("userId"),
+        ...this.searchForm,
+        ...this.paginationInit,
+      };
       // 调用接口请求数据
+      getSubmitTable(parmas).then((res) => {
+        if (res && res.data) {
+          this.tableProps.tableData = res.data;
+        }
+      });
     },
     // 子组件触发的事件监听
     search(data) {
@@ -122,7 +136,8 @@ export default {
     },
     tableEditor(row) {
       this.dialogRuleVisible = true;
-      console.log(row);
+      // 将参数传递给弹窗组件
+      this.itemMessage = row;
     },
     tableRemove(row) {
       this.$confirm("确定删除该条数据吗?", "提示", {
@@ -147,10 +162,22 @@ export default {
     cancleModify() {
       this.dialogRuleVisible = false;
     },
+    // 提交审核
     confirmModify(data) {
-      this.dialogRuleVisible = false;
-      console.log(data);
       // 拿到参数调用接口
+      postAnimalDetail(data)
+        .then((res) => {
+          if (res && res.data) {
+            this.$message({
+              type: "success",
+              message: "修改成功!",
+            });
+          }
+          this.getTableData();
+        })
+        .finally(() => {
+          this.dialogRuleVisible = false;
+        });
     },
   },
   mounted() {},

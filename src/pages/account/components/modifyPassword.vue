@@ -11,7 +11,14 @@
           placeholder="请输入账号"
         ></el-input>
       </el-form-item>
-      <el-form-item prop="password" label="密码：">
+      <el-form-item prop="oldPassword" label="原密码：">
+        <el-input
+          class="valuePart"
+          v-model="form.oldPassword"
+          placeholder="请输入账号"
+        ></el-input>
+      </el-form-item>
+      <el-form-item prop="password" label="新密码：">
         <el-input
           class="valuePart"
           v-model="form.password"
@@ -33,6 +40,7 @@
 </template>
 
 <script>
+import { checkOldPassword, modifyPassword } from "@/api/account.js";
 export default {
   name: "MySearch",
   props: {},
@@ -41,18 +49,24 @@ export default {
       form: {
         account: "",
         password: "",
+        oldPassword: "",
         again: "",
       },
       rules: {
         account: [{ required: true, message: "请输入账号", trigger: "blur" }],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        oldPassword: [
+          { required: true, message: "请输入原密码", trigger: "blur" },
+        ],
+        password: [
+          { required: true, message: "请输入新密码", trigger: "blur" },
+        ],
         again: [{ required: true, message: "请输入密码", trigger: "blur" }],
       },
     };
   },
   mounted() {},
   methods: {
-    // 搜索
+    // 确认修改密码
     comfirm() {
       this.$refs.form.validate((valid) => {
         if (valid) {
@@ -61,12 +75,25 @@ export default {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning",
-          }).then(() => {
-            console.log(this.form);
-            this.$message({
-              type: "success",
-              message: "修改成功",
-            });
+          }).then(async () => {
+            const params = {
+              oldPassword: this.form.oldPassword,
+            };
+            // 校验原密码是否正确
+            const res = await checkOldPassword(params);
+            if (res && res.data && res.data.message == "ok") {
+              const data = this.form;
+              try {
+                // 修改密码
+                await modifyPassword(data);
+                this.$message({
+                  type: "success",
+                  message: "修改成功",
+                });
+              } catch (e) {
+                this.$message.error(e.data.message);
+              }
+            }
           });
         }
       });

@@ -24,6 +24,7 @@
           v-bind="tableProps"
           @editor="tableEditor"
           @remove="tableRemove"
+          @resetPassword="resetUserPassword"
         >
           <el-button type="primary" @click="addUser">添加</el-button>
         </my-table>
@@ -40,6 +41,7 @@
       <div class="section-dialog">
         <my-dialog
           :dialogRuleVisible="dialogRuleVisible"
+          :itemMessage="itemMessage"
           @cancleModify="cancleModify"
           @confirmModify="confirmModify"
         ></my-dialog>
@@ -54,6 +56,11 @@ import MyTable from "./components/MyTable.vue";
 import MyDialog from "./components/MyDialog.vue";
 import GhPagination from "@/components/GhPagination.vue";
 import modifyPasswordVue from "./components/modifyPassword.vue";
+import {
+  getAccountTable,
+  modifyAccount,
+  resetPassword,
+} from "@/api/account.js";
 
 export default {
   name: "account",
@@ -140,13 +147,24 @@ export default {
         pageSize: 10,
       },
       dialogRuleVisible: false,
+      itemMessage: {},
     };
   },
   methods: {
     // 获取表格数据
     getTableData() {
-      const parmas = {}; // 设置请求接口的参数
+      // 设置请求接口的参数
+      const parmas = {
+        userId: localStorage.getItem("userId"),
+        ...this.searchForm,
+        ...this.paginationInit,
+      };
       // 调用接口请求数据
+      getAccountTable(parmas).then((res) => {
+        if (res && res.data) {
+          this.tableProps.tableData = res.data;
+        }
+      });
     },
     // 子组件触发的事件监听
     search(data) {
@@ -179,10 +197,41 @@ export default {
     cancleModify() {
       this.dialogRuleVisible = false;
     },
+    // 提交审核
     confirmModify(data) {
-      this.dialogRuleVisible = false;
-      console.log(data);
       // 拿到参数调用接口
+      modifyAccount(data)
+        .then((res) => {
+          if (res && res.data) {
+            this.$message({
+              type: "success",
+              message: "修改成功!",
+            });
+          }
+          this.getTableData();
+        })
+        .finally(() => {
+          this.dialogRuleVisible = false;
+        });
+    },
+    // 重置密码
+    resetUserPassword(data) {
+      this.$confirm("确定重置该用户的密码吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        const params = {
+          id: data.id,
+        };
+        resetPassword(params).then((res) => {
+          this.$message({
+            type: "success",
+            message: "重置成功!",
+          });
+          this.getTableData();
+        });
+      });
     },
     addUser() {
       this.$message("添加用户");
