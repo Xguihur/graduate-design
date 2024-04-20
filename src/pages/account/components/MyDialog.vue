@@ -9,6 +9,7 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       :show-close="false"
+      @open="reshow"
       width="60%"
       center
       class="box"
@@ -19,7 +20,7 @@
         ref="ruleForm"
         :model="ruleConfig"
       >
-        <el-form-item label="ID" required class="form-item" prop="id">
+        <el-form-item label="ID" class="form-item" prop="id">
           <el-input
             class="rule-input"
             placeholder="请输入"
@@ -28,7 +29,7 @@
           </el-input>
         </el-form-item>
 
-        <el-form-item label="姓名" required class="form-item" prop="name">
+        <el-form-item label="姓名" class="form-item" prop="name">
           <el-input
             class="rule-input"
             placeholder="请输入"
@@ -49,26 +50,12 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="账号" required class="form-item" prop="account">
+        <el-form-item label="账号" class="form-item" prop="account">
           <el-input
             class="rule-input"
             placeholder="请输入"
             maxlength="4"
             v-model="ruleConfig.account"
-          >
-          </el-input>
-        </el-form-item>
-        <el-form-item
-          label="最后更新时间"
-          required
-          class="form-item"
-          prop="lastUpdateTime"
-        >
-          <el-input
-            class="rule-input"
-            placeholder="请输入"
-            maxlength="4"
-            v-model="ruleConfig.lastUpdateTime"
           >
           </el-input>
         </el-form-item>
@@ -99,7 +86,7 @@
 </template>
 
 <script>
-import { getAnimalDetail } from "@/api/animal";
+import { getAccountDetail } from "@/api/account.js";
 export default {
   name: "",
   props: {
@@ -167,13 +154,6 @@ export default {
             trigger: "blur",
           },
         ],
-        lastUpdateTime: [
-          {
-            required: true,
-            message: "请输入最后更新时间",
-            trigger: "blur",
-          },
-        ],
         level: [
           {
             required: true,
@@ -182,14 +162,7 @@ export default {
           },
         ],
       },
-      ruleConfig: {
-        id: null,
-        name: "",
-        sex: "1",
-        account: "",
-        level: "1",
-        lastUpdateTime: "",
-      },
+      ruleConfig: {},
     };
   },
   methods: {
@@ -198,9 +171,12 @@ export default {
       if (Object.keys(this.itemMessage).length > 0) {
         getAccountDetail({ id: this.itemMessage.id }).then((res) => {
           if (res && res.data) {
+            console.log("回显数据：", res.data);
             this.ruleConfig = res.data;
           }
         });
+      } else {
+        this.ruleConfig = {};
       }
     },
     async confirmModify(formName) {
@@ -222,9 +198,7 @@ export default {
       this.$emit("cancleModify");
     },
   },
-  mounted() {
-    this.reshow();
-  },
+  mounted() {},
 };
 </script>
 

@@ -37,8 +37,8 @@ export const getSubmitTable = (params) => {
   });
 };
 
-// 获取动物信息进行回显
-export const getAnimalDetail = (params) => {
+// get 请求 回显我发起的详细数据
+export const getSumitDetail = (params) => {
   // return request({
   //   url: '/api/images/other/image-1712746386275.jpeg',
   //   method: 'get',
@@ -47,14 +47,15 @@ export const getAnimalDetail = (params) => {
   return new Promise((resolve, reject) => {
     resolve({
       data: {
-        id: 2,
-        name: "东北虎",
-        address: "东北",
+        id: 1,
+        name: "圆鼻巨蜥",
+        address: "亚洲西南部",
+        men: "脊索动物门",
         gang: "爬行纲",
-        mu: "目",
-        ke: "科",
-        shu: "属",
-        zhong: "种",
+        mu: "有鳞目",
+        ke: "巨蜥科",
+        shu: "巨蜥属",
+        zhong: "原鼻巨蜥",
         level: "1",
       },
     });
@@ -62,7 +63,7 @@ export const getAnimalDetail = (params) => {
 };
 
 // post 请求
-export const postAnimalDetail = (data) => {
+export const postSubmitDetail = (data) => {
   // return request({
   //   url: "/api/list",
   //   method: "post",

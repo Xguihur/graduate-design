@@ -13,37 +13,37 @@ export const getAnimalTable = (params) => {
       data: [
         {
           id: 1,
-          name: "大熊猫",
-          kind: "熊",
-          distribution: "亚洲",
+          name: "蜂猴",
+          kind: "蜂猴",
+          distribution: "东亚、南亚、东南亚",
           level: "1",
         },
         {
           id: 2,
           name: "东北虎",
           kind: "猫科",
-          distribution: "东北",
+          distribution: "中国东北",
           level: "1",
         },
         {
           id: 3,
           name: "丹顶鹤",
-          kind: "鸟类",
-          distribution: "亚洲",
+          kind: "鹤科",
+          distribution: "中国东北，蒙古东部",
           level: "1",
         },
         {
           id: 4,
-          name: "金钱豹",
-          kind: "猫科",
-          distribution: "韶关",
+          name: "大熊猫",
+          kind: "熊科",
+          distribution: "中国四川、陕西、甘肃",
           level: "1",
         },
         {
           id: 5,
           name: "金丝猴",
           kind: "猴科",
-          distribution: "广东",
+          distribution: "中国西南山区",
           level: "1",
         },
       ],
@@ -61,22 +61,37 @@ export const getAnimalDetail = (params) => {
   return new Promise((resolve, reject) => {
     resolve({
       data: {
-        id: 2,
-        name: "东北虎",
-        address: "东北",
+        id: 1,
+        name: "圆鼻巨蜥",
+        address: "亚洲西南部",
+        men: "脊索动物门",
         gang: "爬行纲",
-        mu: "目",
-        ke: "科",
-        shu: "属",
-        zhong: "种",
+        mu: "有鳞目",
+        ke: "巨蜥科",
+        shu: "巨蜥属",
+        zhong: "原鼻巨蜥",
         level: "1",
       },
     });
   });
 };
 
-// post 请求
+// post 请求 获取动物详细信息，回显弹窗
 export const postAnimalDetail = (data) => {
+  // return request({
+  //   url: "/api/list",
+  //   method: "post",
+  //   data: data,
+  // });
+  return new Promise((resolve, reject) => {
+    resolve({
+      data: "ok",
+    });
+  });
+};
+
+// 删除动物信息
+export const deleteAnimalDetail = (data) => {
   // return request({
   //   url: "/api/list",
   //   method: "post",

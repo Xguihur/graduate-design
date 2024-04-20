@@ -8,12 +8,7 @@
     </div>
     <!-- 表格组件 -->
     <div class="section-table">
-      <my-table
-        v-bind="tableProps"
-        @editor="tableEditor"
-        @remove="tableRemove"
-        @exportDetail="exportDetail"
-      ></my-table>
+      <my-table v-bind="tableProps" @editor="tableEditor"></my-table>
     </div>
     <!-- 分页组件 -->
     <div class="section-pagination">
@@ -36,8 +31,7 @@
 </template>
 
 <script>
-import { postAnimalDetail } from "@/api/animal.js";
-import { getSubmitTable } from "@/api/mySubmit.js";
+import { getSubmitTable, postSubmitDetail } from "@/api/mySubmit.js";
 import MySearch from "./components/MySearch.vue";
 import MyTable from "./components/MyTable.vue";
 import MyDialog from "./components/MyDialog.vue";
@@ -76,29 +70,7 @@ export default {
             value: "lastUpdateTime",
           },
         ],
-        tableData: [
-          {
-            id: 1,
-            approvalId: 2567,
-            status: "审批中",
-            createTime: "2019-08-07 15:34:56",
-            lastUpdateTime: "2019-08-07 16:34:56",
-          },
-          {
-            id: 2,
-            approvalId: 8329,
-            status: "已通过",
-            createTime: "2017-02-07 10:35:52",
-            lastUpdateTime: "2017-09-27 12:24:35",
-          },
-          {
-            id: 3,
-            approvalId: 6296,
-            status: "已驳回",
-            createTime: "2022-06-07 22:31:42",
-            lastUpdateTime: "2022-08-07 15:34:56",
-          },
-        ],
+        tableData: [],
         operation: true,
       },
       searchForm: {
@@ -109,6 +81,7 @@ export default {
       paginationInit: {
         currentPage: 1,
         pageSize: 10,
+        total: 3,
       },
       dialogRuleVisible: false,
       itemMessage: {},
@@ -133,31 +106,19 @@ export default {
     // 子组件触发的事件监听
     search(data) {
       console.log("search:", data);
+      this.paginationInit.currentPage = 1;
+      this.getTableData();
     },
     tableEditor(row) {
       this.dialogRuleVisible = true;
       // 将参数传递给弹窗组件
       this.itemMessage = row;
     },
-    tableRemove(row) {
-      this.$confirm("确定删除该条数据吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        this.$message({
-          type: "success",
-          message: "删除成功!",
-        });
-      });
-    },
     changeSize(data) {
-      // 分页器数据已经在子组件中修改完毕，父组件调用 this.getTableData() 请求表格数据即可
-      console.log("changeSize:", data);
+      this.getTableData();
     },
     changePage(data) {
-      // 分页器数据已经在子组件中修改完毕，父组件调用 this.getTableData() 请求表格数据即可
-      console.log("changePage:", data);
+      this.getTableData();
     },
     cancleModify() {
       this.dialogRuleVisible = false;
@@ -165,7 +126,7 @@ export default {
     // 提交审核
     confirmModify(data) {
       // 拿到参数调用接口
-      postAnimalDetail(data)
+      postSubmitDetail(data)
         .then((res) => {
           if (res && res.data) {
             this.$message({
@@ -180,7 +141,9 @@ export default {
         });
     },
   },
-  mounted() {},
+  mounted() {
+    this.getTableData();
+  },
 };
 </script>
 

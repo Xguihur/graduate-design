@@ -8,12 +8,7 @@
     </div>
     <!-- 表格组件 -->
     <div class="section-table">
-      <my-table
-        v-bind="tableProps"
-        @editor="tableEditor"
-        @remove="tableRemove"
-        @exportDetail="exportDetail"
-      ></my-table>
+      <my-table v-bind="tableProps" @editor="tableEditor"></my-table>
     </div>
     <!-- 分页组件 -->
     <div class="section-pagination">
@@ -109,6 +104,7 @@ export default {
       paginationInit: {
         currentPage: 1,
         pageSize: 10,
+        total: 3,
       },
       dialogRuleVisible: false,
       itemMessage: {},
@@ -125,8 +121,9 @@ export default {
         ...this.paginationInit,
       };
       // 调用接口请求数据
-      getAnimalTable(parmas).then((res) => {
+      getApprovalTable(parmas).then((res) => {
         if (res && res.data) {
+          console.log(res.data);
           this.tableProps.tableData = res.data;
         }
       });
@@ -134,30 +131,19 @@ export default {
     // 子组件触发的事件监听
     search(data) {
       console.log("search:", data);
+      this.paginationInit.currentPage = 1;
+      this.getTableData();
     },
     tableEditor(row) {
       this.dialogRuleVisible = true;
-      console.log(row);
-    },
-    tableRemove(row) {
-      this.$confirm("确定删除该条数据吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        this.$message({
-          type: "success",
-          message: "删除成功!",
-        });
-      });
+      // 将 row 作为参数传递给弹窗组件查询回显数据
+      this.itemMessage = row;
     },
     changeSize(data) {
-      // 分页器数据已经在子组件中修改完毕，父组件调用 this.getTableData() 请求表格数据即可
-      console.log("changeSize:", data);
+      this.getTableData();
     },
     changePage(data) {
-      // 分页器数据已经在子组件中修改完毕，父组件调用 this.getTableData() 请求表格数据即可
-      console.log("changePage:", data);
+      this.getTableData();
     },
     cancleModify() {
       this.dialogRuleVisible = false;

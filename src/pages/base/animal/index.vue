@@ -37,7 +37,11 @@ import MySearch from "./components/MySearch.vue";
 import MyTable from "./components/MyTable.vue";
 import MyDialog from "./components/MyDialog.vue";
 import GhPagination from "../../../components/GhPagination.vue";
-import { getAnimalTable, postAnimalDetail } from "@/api/animal.js";
+import {
+  getAnimalTable,
+  postAnimalDetail,
+  deleteAnimalDetail,
+} from "@/api/animal.js";
 
 export default {
   name: "animal",
@@ -60,7 +64,7 @@ export default {
             value: "name",
           },
           {
-            label: "种类",
+            label: "种",
             value: "kind",
           },
           {
@@ -72,43 +76,7 @@ export default {
             value: "level",
           },
         ],
-        tableData: [
-          {
-            id: 1,
-            name: "大熊猫",
-            kind: "熊",
-            distribution: "亚洲",
-            level: "1",
-          },
-          {
-            id: 2,
-            name: "东北虎",
-            kind: "猫科",
-            distribution: "东北",
-            level: "1",
-          },
-          {
-            id: 3,
-            name: "丹顶鹤",
-            kind: "鸟类",
-            distribution: "亚洲",
-            level: "1",
-          },
-          {
-            id: 4,
-            name: "金钱豹",
-            kind: "猫科",
-            distribution: "韶关",
-            level: "1",
-          },
-          {
-            id: 5,
-            name: "金丝猴",
-            kind: "猴科",
-            distribution: "广东",
-            level: "1",
-          },
-        ],
+        tableData: [],
         operation: true,
       },
       searchForm: {
@@ -122,6 +90,7 @@ export default {
       paginationInit: {
         currentPage: 1,
         pageSize: 10,
+        total: 5,
       },
       dialogRuleVisible: false,
       itemMessage: {},
@@ -140,12 +109,14 @@ export default {
       getAnimalTable(parmas).then((res) => {
         if (res && res.data) {
           this.tableProps.tableData = res.data;
+          // 分页器的总数也需要赋值一下
         }
       });
     },
     // 子组件触发的事件监听
     search(data) {
       console.log("search:", data);
+      this.paginationInit.currentPage = 1;
       this.getTableData();
     },
     tableEditor(row) {
@@ -165,19 +136,20 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
-        this.$message({
-          type: "success",
-          message: "删除成功!",
+        // 调用接口删除数据
+        deleteAnimalDetail(row.id).then((res) => {
+          this.$message({
+            type: "success",
+            message: "删除成功!",
+          });
         });
       });
     },
     changeSize(data) {
-      // 分页器数据已经在子组件中修改完毕，父组件调用 this.getTableData() 请求表格数据即可
-      console.log("changeSize:", data);
+      this.getTableData();
     },
     changePage(data) {
-      // 分页器数据已经在子组件中修改完毕，父组件调用 this.getTableData() 请求表格数据即可
-      console.log("changePage:", data);
+      this.getTableData();
     },
     cancleModify() {
       this.dialogRuleVisible = false;

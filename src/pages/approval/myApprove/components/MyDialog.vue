@@ -9,6 +9,7 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       :show-close="false"
+      @open="reshow"
       width="60%"
       center
       class="box"
@@ -19,7 +20,7 @@
         ref="ruleForm"
         :model="ruleConfig"
       >
-        <el-form-item label="编号" required class="form-item" prop="id">
+        <!-- <el-form-item label="编号" required class="form-item" prop="id">
           <el-input
             class="rule-input"
             placeholder="请输入"
@@ -28,7 +29,7 @@
             :disabled="disabled"
           >
           </el-input>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item label="名称" required class="form-item" prop="name">
           <el-input
@@ -48,6 +49,15 @@
             placeholder="请输入"
             maxlength="4"
             v-model="ruleConfig.address"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item label="门" required class="form-item" prop="men">
+          <el-input
+            class="rule-input"
+            placeholder="请输入"
+            maxlength="4"
+            v-model="ruleConfig.men"
           >
           </el-input>
         </el-form-item>
@@ -126,7 +136,7 @@
           >通 过</el-button
         >
         <el-button
-          type="primary"
+          type="danger"
           @click="approvalRefuse('ruleForm')"
           style="margin-right: 10px"
           >驳 回</el-button
@@ -138,7 +148,7 @@
 </template>
 
 <script>
-import { getAnimalDetail } from "@/api/animal";
+import { getApprovalDetail } from "@/api/myApproval";
 export default {
   name: "",
   props: {
@@ -152,18 +162,6 @@ export default {
     },
   },
   data() {
-    // 校验期次范围:
-    const checkRange = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("请输入期次范围"));
-      }
-      // 判断是否为数字类型
-      const regex = /^(?:[1-9]\d{0,3}|9999)$/;
-      if (value.match(regex) == null) {
-        return callback(new Error("请选择在 1-9999 之间的整数"));
-      }
-      callback();
-    };
     return {
       disabled: true,
       protecLevelOptions: [
@@ -207,6 +205,13 @@ export default {
           {
             required: true,
             message: "请输入分布",
+            trigger: "blur",
+          },
+        ],
+        men: [
+          {
+            required: true,
+            message: "请输入门",
             trigger: "blur",
           },
         ],
@@ -254,9 +259,10 @@ export default {
         ],
       },
       ruleConfig: {
-        id: null,
+        // id: null,
         name: "",
         address: "",
+        men: "",
         gang: "",
         mu: "",
         ke: "",
@@ -300,8 +306,9 @@ export default {
     // 回显
     reshow() {
       if (Object.keys(this.itemMessage).length > 0) {
-        getAnimalDetail(this.itemMessage.id).then((res) => {
+        getApprovalDetail(this.itemMessage.id).then((res) => {
           if (res && res.data) {
+            console.log(res.data);
             this.ruleConfig = res.data;
           }
         });
@@ -341,9 +348,7 @@ export default {
       this.$emit("cancleModify");
     },
   },
-  mounted() {
-    this.reshow();
-  },
+  mounted() {},
 };
 </script>
 

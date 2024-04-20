@@ -26,7 +26,7 @@
           @remove="tableRemove"
           @resetPassword="resetUserPassword"
         >
-          <el-button type="primary" @click="addUser">添加</el-button>
+          <el-button type="primary" @click="tableEditor(null)">添加</el-button>
         </my-table>
       </div>
       <!-- 分页组件 -->
@@ -60,6 +60,7 @@ import {
   getAccountTable,
   modifyAccount,
   resetPassword,
+  deleteAccount,
 } from "@/api/account.js";
 
 export default {
@@ -101,40 +102,7 @@ export default {
             value: "lastUpdateTime",
           },
         ],
-        tableData: [
-          {
-            id: 1,
-            name: "guihua",
-            sex: "男",
-            account: "13898989898",
-            level: "超级管理员",
-            lastUpdateTime: "2019-05-08 14:36",
-          },
-          {
-            id: 2,
-            name: "lihua",
-            sex: "男",
-            account: "15623455334",
-            level: "管理员",
-            lastUpdateTime: "2017-11-08 19:36",
-          },
-          {
-            id: 3,
-            name: "wangxiang",
-            sex: "女",
-            account: "13232664764",
-            level: "操作员",
-            lastUpdateTime: "2020-12-16 08:56",
-          },
-          {
-            id: 4,
-            name: "lifei",
-            sex: "男",
-            account: "17876542234",
-            level: "操作员",
-            lastUpdateTime: "2022-05-19 18:38",
-          },
-        ],
+        tableData: [],
         operation: true,
       },
       searchForm: {
@@ -145,6 +113,7 @@ export default {
       paginationInit: {
         currentPage: 1,
         pageSize: 10,
+        total: 4,
       },
       dialogRuleVisible: false,
       itemMessage: {},
@@ -169,10 +138,16 @@ export default {
     // 子组件触发的事件监听
     search(data) {
       console.log("search:", data);
+      this.paginationInit.currentPage = 1;
+      this.getTableData();
     },
     tableEditor(row) {
       this.dialogRuleVisible = true;
-      console.log(row);
+      if (row !== null) {
+        this.itemMessage = row;
+      } else {
+        this.itemMessage = {};
+      }
     },
     tableRemove(row) {
       this.$confirm("确定删除该条数据吗?", "提示", {
@@ -180,24 +155,25 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
-        this.$message({
-          type: "success",
-          message: "删除成功!",
+        deleteAccount(row.id).then((res) => {
+          this.$message({
+            type: "success",
+            message: "删除成功!",
+          });
         });
+        this.getTableData();
       });
     },
     changeSize(data) {
-      // 分页器数据已经在子组件中修改完毕，父组件调用 this.getTableData() 请求表格数据即可
-      console.log("changeSize:", data);
+      this.getTableData();
     },
     changePage(data) {
-      // 分页器数据已经在子组件中修改完毕，父组件调用 this.getTableData() 请求表格数据即可
-      console.log("changePage:", data);
+      this.getTableData();
     },
     cancleModify() {
       this.dialogRuleVisible = false;
     },
-    // 提交审核
+    // 修改数据
     confirmModify(data) {
       // 拿到参数调用接口
       modifyAccount(data)
@@ -233,11 +209,10 @@ export default {
         });
       });
     },
-    addUser() {
-      this.$message("添加用户");
-    },
   },
-  mounted() {},
+  mounted() {
+    this.getTableData();
+  },
 };
 </script>
 

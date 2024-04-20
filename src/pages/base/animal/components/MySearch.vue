@@ -86,22 +86,26 @@ export default {
       options: [
         {
           value: "1",
-          label: "纲",
+          label: "门",
         },
         {
           value: "2",
-          label: "目",
+          label: "纲",
         },
         {
           value: "3",
-          label: "科",
+          label: "目",
         },
         {
           value: "4",
-          label: "属",
+          label: "科",
         },
         {
           value: "5",
+          label: "属",
+        },
+        {
+          value: "6",
           label: "种",
         },
       ],

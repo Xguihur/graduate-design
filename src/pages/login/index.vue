@@ -74,7 +74,7 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error("请输入正确的用户名"));
+        callback(new Error("请输入正确的账号"));
       } else {
         callback();
       }

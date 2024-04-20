@@ -79,7 +79,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .top {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   margin-right: 20px;
   float: right;
 }

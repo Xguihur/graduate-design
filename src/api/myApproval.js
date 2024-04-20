@@ -36,6 +36,30 @@ export const getApprovalTable = (params) => {
     });
   });
 };
+// 根据 id 获取审批详情，回显数据
+export const getApprovalDetail = (params) => {
+  // return request({
+  //   url: '/api/images/other/image-1712746386275.jpeg',
+  //   method: 'get',
+  //   params: params,
+  // });
+  return new Promise((resolve, reject) => {
+    resolve({
+      data: {
+        id: 1,
+        name: "圆鼻巨蜥",
+        address: "亚洲西南部",
+        men: "脊索动物门",
+        gang: "爬行纲",
+        mu: "有鳞目",
+        ke: "巨蜥科",
+        shu: "巨蜥属",
+        zhong: "原鼻巨蜥",
+        level: "1",
+      },
+    });
+  });
+};
 
 // 完成审批，通过或者驳回
 export const postApproval = (data) => {
