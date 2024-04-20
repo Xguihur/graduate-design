@@ -68,6 +68,7 @@
 
 <script>
 import { validUsername } from "@/utils/validate";
+import { apiLogin } from "@/api/login.js";
 
 export default {
   name: "login",
@@ -126,21 +127,31 @@ export default {
           this.loading = true;
           // 调用接口进行登录，登录成功后跳转路由
           // 拿到 token 后存到 localStorage 中
-          setTimeout(() => {
-            this.$message({
-              message: "登录成功",
-              type: "success",
-            });
-            this.loading = false;
-            localStorage.setItem("token", "123456");
+          const params = this.loginForm;
+          apiLogin(params).then((res) => {
+            if (res && res.data) {
+              this.$message({
+                message: "登录成功",
+                type: "success",
+              });
+              this.loading = false;
+              localStorage.setItem("token", "123456");
+              const mockData = {
+                userId: "4",
+                roleId: "1",
+              };
+              localStorage.setItem("loginMsg", mockData); // 用户 id 存在缓存中，要用 data 的赋值
 
-            // 如果路由中有 redirect 参数，就跳转到 redirect 参数指向的页面
-            if (this.$route.query.redirect) {
-              this.$router.push(this.$route.query.redirect);
+              // 如果路由中有 redirect 参数，就跳转到 redirect 参数指向的页面
+              if (this.$route.query.redirect) {
+                this.$router.push(this.$route.query.redirect);
+              } else {
+                this.$router.push({ path: "/" });
+              }
             } else {
-              this.$router.push({ path: "/" });
+              // 如果是密码错误或者其他的，就在这展示
             }
-          }, 1000);
+          });
         } else {
           // console.log('error submit!!');
           return false;
